@@ -15,6 +15,7 @@
 - 如何衡量所谓的相似度？  
 #### 如何将数据进行降维，同时又保留他的关键信息？  
 文章采用了autoencoder，不过这个autoencoder的特殊之处在于，它增强了对比损失，所以在这篇文章中也叫做Contrastive Auto-encoder，以下是其损失函数的构造公式：  
+![损失函数的构造公式]（https://github.com/makabal/paper/blob/main/tupian/CADE-math-1.jpg?raw=true）
 
 
 
