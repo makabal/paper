@@ -78,9 +78,13 @@
   并通过Adam优化器对每个特征的概率p进行优化，从而找到最重要的扰动特征。  
   而扰动的目标就是让测试样本尽可能的靠近质心，也就是找出最重要的特征，这样就能知道什么特征对漂移的影响最大。  
 ## 效果评估  
-两个测试app：Android malware family attribution and network intrusion detection   
-### Android malware family attribution  
-Drebin 数据集
+数据集：Android malware family attribution中的Drebin数据集；Network Intrusion Detection数据集(参考文献：Iman Sharafaldin, Arash Habibi Lashkari, and Ali A Ghorbani. Toward generating a new intrusion detection dataset and intrusion traffic characterization. In Prof. of ICISSP, 2018.)  
+指标：精确率、召回率、F1 分数、检查工作量的指标  
+Baseline：a standard Vanilla autoencoder、Transcend  
+实验结果表名，通过对降维之后的数据在潜在空间中，漂移数据和原始数据的分离度更好。  
+![Drebin 数据集的原始空间和潜在空间中测试样本与其最近质心之间距离的箱线图。来自以前未见过的家族的样本被视为漂流样本。]
+
+
 
 
 
