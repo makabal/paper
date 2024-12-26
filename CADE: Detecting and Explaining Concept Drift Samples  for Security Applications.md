@@ -78,6 +78,10 @@
   并通过Adam优化器对每个特征的概率p进行优化，从而找到最重要的扰动特征。  
   而扰动的目标就是让测试样本尽可能的靠近质心，也就是找出最重要的特征，这样就能知道什么特征对漂移的影响最大。  
 ## 效果评估  
+两个测试app：Android malware family attribution and network intrusion detection   
+### Android malware family attribution  
+Drebin 数据集
+
 
 
 
