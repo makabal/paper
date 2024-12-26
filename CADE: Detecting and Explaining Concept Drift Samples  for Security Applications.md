@@ -14,6 +14,7 @@
 - 如何将数据进行降维，同时又保留他的关键信息？
 - 如何衡量所谓的相似度？  
 #### 如何将数据进行降维，同时又保留他的关键信息？  
+![漂移监测的高层次工作流程](https://github.com/makabal/paper/blob/main/tupian/CADE-2.jpg)  
 文章采用了autoencoder，不过这个autoencoder的特殊之处在于，它增强了对比损失，所以在这篇文章中也叫做Contrastive Auto-encoder，以下是其损失函数的构造公式：  
 ![](https://github.com/makabal/paper/blob/main/tupian/CADE-math-1.jpg)   
 这个公式主要由两个部分组成，加号前面的部分是指重建损失，也就是确保Contrastive Auto-encoder在降维的过程中能够保留关键信息的部分，其实现的方法主要是通过将原始数据和Contrastive Auto-encoder降维再重建后的数据做差后计算欧几里得距离。  
