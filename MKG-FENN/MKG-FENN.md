@@ -1,3 +1,9 @@
 # MKG-FENN(只对模型本身进行理解)  
 ## 模型总体架构  
-![模型的总体框架图](https://github.com/makabal/paper/blob/main/tupian/MKG-FENN.jpg)  
+![模型的总体框架图](https://github.com/makabal/paper/blob/main/tupian/MKG-FENN.jpg)    
+### 数据处理部分  
+MKG-FENN 模型框架主要由两大部分构成：多模态知识图谱（MKG）和融合端到端神经网络（FENN），先从不同的方面进行知识图谱的构筑，这一步我理解为数据集的处理，在知识图谱构建完成之后再通过GNN进行特征提取，再将几个提取到的不同特征数据集进行拼接融合，得到一个全新的特征数据集。  
+### 模型部分  
+就是一个普通的MLP模型
+
+
