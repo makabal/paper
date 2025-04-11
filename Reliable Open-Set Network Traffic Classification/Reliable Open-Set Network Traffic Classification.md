@@ -1,7 +1,123 @@
-# Reliable Open-Set Network Traffic Classification
-## 之前方法的不足
-### 现在遇到的问题————随着应用和协议的快速发展，现实中流量类别呈现开放性 —— 不仅存在训练集中已知的类别，也会出现大量未知类别的流量。而普通的分类模型无法很好识别。      
-### 现有方法的不足————基于“闭集假设”，假设所有测试数据都来自训练时已见过的类，不能处理未知类，在开放集场景下，未知类往往被错误分类为某个已知类，导致准确率显著下降也就是之前遇到的概念漂移问题。  
-### 现有开放集中的尝试————基于分类概率阈值的方法，基于分类概率阈值的方法，通过设定概率阈值来区分已知与未知类；基于梯度敏感度的方法，使用网络推理过程中的梯度强度作为判别指标，不过这种方法会有泛化性不足的问题。  
-### 本文提出的方法——引入分类不确定性建模：针对开放集问题，需要一个机制来评估分类决策的可靠性（即置信度是否可信）；已知类具有先验知识，分类决策更确定；而未知类缺乏先验，其分类概率应呈现出更高的不确定性。通过构建“第二阶分类概率”，可将不确定性显式建模出来，从而判断是否为未知类。    
-## 方法   
+# 📘 RoNeTC: Reliable Open-Set Network Traffic Classification
+
+> This document provides a detailed method summary of the RoNeTC model proposed in the paper:  
+> **"Reliable Open-Set Network Traffic Classification"**  
+> 📝 *Xueman Wang, Yipeng Wang, et al.*  
+> 📚 Published in: *IEEE Transactions on Information Forensics and Security, 2025*
+
+---
+
+## 🚀 Overview
+
+RoNeTC is a deep learning framework designed for **open-set network traffic classification**, which addresses two key challenges:
+
+- Classify traffic **from known classes** accurately
+- **Reject unknown traffic types** (e.g., unseen protocols or malicious flows)
+- **Quantify prediction uncertainty** to improve decision reliability
+
+---
+
+## 🧠 Model Architecture (Fig. 3)
+
+The overall pipeline consists of **two phases**:
+
+- **Training Phase**
+- **Classification Phase**
+
+Each phase contains the following modules:
+
+1. **Flow Preprocessing**
+2. **Global-Local Feature Extractor**
+3. **Single View Opinion Generator**
+4. **Multi-View Opinion Fusion**
+
+---
+
+## 🔁 1. Flow Preprocessing (Fig. 4)
+
+Each network flow is decomposed into three distinct views:
+
+| View Type                | Description                          | Layer         |
+|--------------------------|--------------------------------------|---------------|
+| IP Header View           | Source IP, TTL, total length         | Network Layer |
+| Transport Layer Header   | Port, window size, TCP flags         | Transport     |
+| Packet Payload View      | First `N` bytes of packet payload    | Application   |
+
+→ Each view is processed as a 2D tensor: `[num_packets × num_bytes × channels]`
+
+---
+
+## 🧩 2. Global-Local Feature Extractor (Fig. 5)
+
+Each view is passed through a dual-path encoder:
+
+| Path       | Method         | Purpose                                 |
+|------------|----------------|-----------------------------------------|
+| Local Path | CNN            | Extract per-packet structure            |
+| Global Path| Transformer    | Model field evolution across packets    |
+
+→ Local and global features are fused via concatenation + CNN.
+
+---
+
+## 🔐 3. Opinion Generator
+
+Instead of softmax, RoNeTC uses **Dirichlet distribution** to model *second-order probability* and quantify **uncertainty**:
+
+- Evidence vector `e = [e₁, ..., e_K]`
+- Dirichlet parameters: `α_k = e_k + 1`
+- Outputs:
+  - **Belief**: `b_k = e_k / S`
+  - **Uncertainty**: `u = K / S`, where `S = Σ (e_k + 1)`
+
+> 📌 More evidence → high belief, low uncertainty  
+> 🚫 Low evidence (e.g., for unknown classes) → high uncertainty
+
+---
+
+## ⚖️ 4. Opinion Fusion (Fig. 6)
+
+Uses **Dempster-Shafer theory** to fuse multi-view outputs:
+
+\[
+b_k = \frac{1}{1 - C}(b^{(1)}_k b^{(2)}_k + b^{(1)}_k u^{(2)} + b^{(2)}_k u^{(1)}), \quad u = \frac{1}{1 - C} u^{(1)} u^{(2)}
+\]
+
+- `C` is the conflict coefficient between views
+- Final decision includes:
+  - Aggregated belief over classes
+  - Combined uncertainty
+
+---
+
+## 🧪 5. Classification Phase (Fig. 7)
+
+In the inference phase:
+
+- Compute final uncertainty `u`
+- Use **Youden index** to choose optimal threshold `σ`
+- If `u ≥ σ` → classify as **unknown**
+- Else → predict class with highest belief
+
+---
+
+## ✅ Key Contributions
+
+| Feature                    | Description                                           |
+|----------------------------|-------------------------------------------------------|
+| Multi-view Representation | Exploits structural diversity of packet features      |
+| Uncertainty Modeling       | Replaces softmax with Dirichlet for reliability       |
+| Multi-view Fusion          | Combines beliefs via evidence theory                 |
+| Open-set Capability        | Differentiates known vs. unknown traffic dynamically  |
+
+---
+
+## 📎 Citation
+
+```bibtex
+@article{wang2025ronetc,
+  title={Reliable Open-Set Network Traffic Classification},
+  author={Wang, Xueman and Wang, Yipeng and others},
+  journal={IEEE Transactions on Information Forensics and Security},
+  year={2025}
+}
