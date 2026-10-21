@@ -58,7 +58,7 @@ CDL 则在编码后的局部表示上构建辅助约束，和重建损失一起�
 TimeRadar 通过输入序列预测分数阶参数，而不是人工指定角度：
 
 $$
-r=\operatorname{Sigmoid}(\operatorname{MLP}(X)),\qquad
+r=\mathrm{Sigmoid}(\mathrm{MLP}(X)),\qquad
 \alpha=\frac{r\pi}{2}
 $$
 
@@ -106,8 +106,8 @@ $$
 
 $$
 S(X_t)=
-\operatorname{Var}_{W}(\hat X_t)+
-\left\|X_t-\operatorname{Mean}_{W}(\hat X_t)\right\|_2^2
+\mathrm{Var}_{W}(\hat X_t)+
+\left\|X_t-\mathrm{Mean}_{W}(\hat X_t)\right\|_2^2
 $$
 
 即 **异常分数 = 重建不确定性 + 重建误差**。难以稳定重建的点可能得到更高分数。对于需要二值检测结果的评价，论文采用 SPOT 选取阈值。
